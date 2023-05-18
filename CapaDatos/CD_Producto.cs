@@ -23,7 +23,7 @@ namespace CapaDatos
                     StringBuilder builder = new StringBuilder();
 
                     builder.AppendLine("SELECT p.IdProducto,p.Nombre,p.Descripcion,");
-                    builder.AppendLine("m.IdMarca,m.Descripcion[DesMarca,]");
+                    builder.AppendLine("m.IdMarca,m.Descripcion[DesMarca],");
                     builder.AppendLine("c.IdCategoria,c.Descripcion[DesCategoria],");
                     builder.AppendLine("p.Precio,p.Stock,p.RutaImagen,p.NombreImagen,p.Activo");
                     builder.AppendLine("from PRODUCTO p");
