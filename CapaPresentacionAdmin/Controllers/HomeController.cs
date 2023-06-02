@@ -58,5 +58,14 @@ namespace CapaPresentacionAdmin.Controllers
             return Json(new { resultado = respuesta, mensaje = mensaje }, JsonRequestBehavior.AllowGet);
         }
 
+
+        [HttpGet]
+        public JsonResult ListaDashboard()
+        {
+            Dashboard objeto = new CN_Dashboard().VerDashboard();
+
+            return Json(new { resultado = objeto }, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }
