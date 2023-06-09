@@ -45,5 +45,49 @@ namespace CapaDatos
             }
             return objeto;
         }
+
+        public List<Reporte> Ventas(string fechaInicio, string fechaFin, string idTransaccion)
+        {
+            List<Reporte> lista = new List<Reporte>();
+
+            try
+            {
+                using (SqlConnection oConexion = new SqlConnection(Conexion.cn))
+                {
+
+
+                    SqlCommand cmd = new SqlCommand("sp_reporteVentas", oConexion);
+                    cmd.Parameters.AddWithValue("fechainicio", fechaInicio);
+                    cmd.Parameters.AddWithValue("fechafin", fechaFin);
+                    cmd.Parameters.AddWithValue("idtransaccion", idTransaccion);
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    oConexion.Open();
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            lista.Add(
+                                new Reporte()
+                                {
+                                    FechaVenta = reader["FechaVenta"].ToString(),
+                                    Cliente = reader["Cliente"].ToString(),
+                                    Producto = reader["Producto"].ToString(),
+                                    Precio = Convert.ToDecimal(reader["Precio"]),
+                                    Cantidad = Convert.ToInt32(reader["Cantidad"]),
+                                    Total = Convert.ToDecimal(reader["Total"]),
+                                    IdTransaccion = reader["IdTransaccion"].ToString()
+                                });
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                lista = new List<Reporte>();
+            }
+            return lista;
+        }
     }
 }
