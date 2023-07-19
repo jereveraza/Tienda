@@ -47,11 +47,7 @@ namespace CapaNegocio
                 {
                     Mensaje = "No se pudo enviar el correo";
                     return 0;
-                }
-
-                
-
-                
+                }  
             }                
             else
                 return 0;
@@ -82,6 +78,44 @@ namespace CapaNegocio
         public bool Eliminar(int id, out string Mensaje)
         {
             return objCapaDato.Eliminar(id, out Mensaje);
+        }
+
+        public bool CambiarContraseña(int idUsuario, string nuevaClave, out string Mensaje)
+        {
+            return objCapaDato.CambiarContraseña(idUsuario,nuevaClave, out Mensaje);
+        }
+
+        public bool ReestablecerContraseña(int idUsuario, string correo, out string Mensaje)
+        {
+            Mensaje = string.Empty;
+            string nuevaClave = CN_Recursos.GenerarClave();
+
+            bool resultado = objCapaDato.ReestablecerContraseña(idUsuario,CN_Recursos.CovertirSHA256(nuevaClave), out Mensaje);
+
+            if (resultado)
+            {
+                string asunto = "Contraseña reestablecida";
+                string mensajeCorreo = "<h3>Su clave fue reestablecida correctamente</h3><br><p>Su nueva contraseña es: !clave!</p>";
+                mensajeCorreo = mensajeCorreo.Replace("!clave!", nuevaClave);
+
+                bool respuesta = CN_Recursos.EnviarCorreo(correo, asunto, mensajeCorreo);
+
+                if (respuesta)
+                {
+                    return true;
+                }
+                else
+                {
+                    Mensaje = "No se pudo enviar el correo";
+                    return false;
+                }
+            }
+            else
+            {
+                Mensaje = "No se pudo reestablecer la contraseña";
+                return false;
+            }
+               
         }
 
     }

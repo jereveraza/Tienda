@@ -147,5 +147,55 @@ namespace CapaDatos
             return resultado;
         }
 
+        public bool CambiarContraseña(int idUsuario,string nuevaClave, out string Mensaje)
+        {
+            bool resultado = false;
+            Mensaje = string.Empty;
+
+            try
+            {
+                using (SqlConnection oConexion = new SqlConnection(Conexion.cn))
+                {
+                    SqlCommand cmd = new SqlCommand("UPDATE USUARIO SET CLAVE = @nuevaClave, reestablecer = 0 WHERE idUsuario = @id", oConexion);
+                    cmd.Parameters.AddWithValue("@id", idUsuario);
+                    cmd.Parameters.AddWithValue("@nuevaClave", nuevaClave);
+                    cmd.CommandType = CommandType.Text;
+                    oConexion.Open();
+                    resultado = cmd.ExecuteNonQuery() > 0 ? true : false;
+                }
+            }
+            catch (Exception e)
+            {
+                resultado = false;
+                Mensaje = e.Message;
+            }
+            return resultado;
+        }
+
+        public bool ReestablecerContraseña(int idUsuario, string clave, out string Mensaje)
+        {
+            bool resultado = false;
+            Mensaje = string.Empty;
+
+            try
+            {
+                using (SqlConnection oConexion = new SqlConnection(Conexion.cn))
+                {
+                    SqlCommand cmd = new SqlCommand("UPDATE USUARIO SET CLAVE = @clave, reestablecer = 1 WHERE idUsuario = @id", oConexion);
+                    cmd.Parameters.AddWithValue("@id", idUsuario);
+                    cmd.Parameters.AddWithValue("@clave", clave);
+                    cmd.CommandType = CommandType.Text;
+                    oConexion.Open();
+                    resultado = cmd.ExecuteNonQuery() > 0 ? true : false;
+                }
+            }
+            catch (Exception e)
+            {
+                resultado = false;
+                Mensaje = e.Message;
+            }
+            return resultado;
+        }
+
     }
 }
